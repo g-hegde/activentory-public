@@ -157,18 +157,3 @@ def map_cols():
                                                     
 if __name__ == "__main__":
     map_cols()
-    """
-    demo = args.demo
-    if demo == "radio":
-        radio()
-    elif demo == "line":
-        line()
-    elif demo == "map":
-        show_map()
-    elif demo == "select":
-        select()
-    elif demo == "map_and_select":
-        map_and_select()
-    elif demo == "map_cols":
-        map_cols()
-    """
