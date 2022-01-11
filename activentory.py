@@ -67,7 +67,7 @@ def map_cols():
     
     lat = 40.44283008724992
     long = -79.98941715251705
-    main_map = fl.Map(location=[lat, long], default_zoom_start=15,width='55%',height='55%')
+    main_map = fl.Map(location=[lat, long], zoom_start=15,width='55%',height='55%')
     n_queries = 40
 
     st.write('## Creating Lead Service Line (LSL) Inventory from scratch')
@@ -116,7 +116,7 @@ def map_cols():
     
         fl.Marker(location=[lat, long],popup='Location likely to contain LSL',tooltip = "Click for more information",icon=fl.Icon(color='blue')).add_to(main_map)
         #display.display(main_map)
-    
+        main_map = fl.Map(location=[lat, long], zoom_start=15,width='55%',height='55%')
         color = "green"
         info = "Location does not contain LSL"
         if option == "Yes":
