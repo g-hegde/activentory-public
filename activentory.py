@@ -67,7 +67,7 @@ def map_cols():
     
     lat = 40.44283008724992
     long = -79.98941715251705
-    main_map = fl.Map(location=[lat, long], default_zoom_start=15,width='65%',height='65%')
+    main_map = fl.Map(location=[lat, long], default_zoom_start=15,width='55%',height='55%')
     n_queries = 40
 
     st.write('## Creating Lead Service Line (LSL) Inventory from scratch')
@@ -91,7 +91,7 @@ def map_cols():
     with c3:
         st.empty()
         
-    c1,c2,c3 = st.columns([2.2,2.2,2.2])
+    c1,c2,c3 = st.columns([2.2,1.0,2.2])
 
 
     with c2:
