@@ -91,7 +91,7 @@ def map_cols():
     with c3:
         st.empty()
         
-    c1,c2,c3 = st.columns([2.2,1.5,2.2])
+    c1,c2,c3 = st.columns([2.2,2.2,2.2])
 
 
     with c2:
