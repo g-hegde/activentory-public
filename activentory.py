@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-Created on Fri Nov 12 11:07:08 2021
-
-@author: livel
+A visualization demo for Activentory workflow.
+Data is from City of Pttsburgh Lead Service Line Database
+Accuracy data is for demo purposes only.
 """
 
 import streamlit as st
@@ -70,17 +70,17 @@ def map_cols():
     main_map = fl.Map(location=[lat, long], default_zoom_start=15,width='65%',height='65%')
     n_queries = 40
 
+    st.write('## Creating Lead Service Line (LSL) Inventory from scratch')
+    st.write('With our KETOS SHIELD (TM) and Activentory solution, utilities can build an inventory of lead service lines from the ground up.')
+    st.write('## How does it work?')
+    st.write('Activentory is a machine learning model that takes in commonly available attributes such as house area, price sold, year built among other commonly available property and geographical attributes.')
+    st.write('The model suggests the most promising locations to test water for lead.')
+    st.write('SHIELD (TM) is KETOS\' groundbreaking water quality monitoring solution that can test for lead levels at identified locations with high accuracy in a matter of minutes. Shield allows utilities to quickly assess above-threshold lead presence on-site.')
+    st.write('The presence or absence of lead at a given site is fed back to the predictive model. As the model gets fed data from multiple sites, its accuracy improves.')
+    st.write('At an accuracy of 70-80% the model can be used to assess the likelihood of lead service line presence of the entire service area.')
+
     
     df_map = pd.read_csv('LSL_property_merged.csv')
-    st.sidebar.write('## Creating Lead Service Line (LSL) Inventory from scratch')
-    st.sidebar.write('With our KETOS Shield (TM) and Activentory (TM) solution, utilities can build an inventory of lead service lines from the ground up.')
-    st.sidebar.write('')
-    st.sidebar.write('## How does it work?')
-    st.sidebar.write('Activentory (TM) is a machine learning model that takes in commonly available attributes such as house area, price sold, year built among other commonly available property and geographical attributes.')
-    st.sidebar.write('The model suggests the most promising locations to test water for lead.')
-    st.sidebar.write('Shield (TM) is KETOS\' groundbreaking water quality monitoring solution that can test for lead levels at identified locations with high accuracy in a matter of minutes. Shield allows utilities to quickly assess above-threshold lead presence on-site.')
-    st.sidebar.write('The presence or absence of lead at a given site is fed back to the predictive model. As the model gets fed data from multiple sites, its accuracy improves.')
-    st.sidebar.write('At an accuracy of 70-80% the model can be used to assess the likelihood of lead service line presence of the entire service area.')
     
     c1,c2, c3 = st.columns([0.25,0.5,0.25])
     with c1:
@@ -91,14 +91,27 @@ def map_cols():
     with c3:
         st.empty()
         
-    c1,c2,c3 = st.columns([2.5,1,2.5])
-    
+    c1,c2,c3 = st.columns([2.2,1.5,2.2])
+
+
+    with c2:
+        idx = np.random.randint(0,df_map.shape[0])
+        row = df_map.iloc[idx]
+        st.write('')
+        st.write('')
+        st.write('')
+        st.write('Address containing potential LSL.')
+        st.write(row['Address'])
+        st.write('Test this location for Lead with KETOS Shield (TM)')
+        st.write('')
+        option = st.selectbox("Does testing suggest that this location might contain an LSL?",("Select","Yes","No","stop"),0)
+   
     with c1:
         
         # for i in range(n_queries):
         #display.clear_output(wait=False)
-        idx = np.random.randint(0,df_map.shape[0])
-        row = df_map.iloc[idx]
+        
+        
         lat = row['Lat']
         long = row['Long']
     
@@ -107,7 +120,6 @@ def map_cols():
     
         color = "green"
         info = "Location does not contain LSL"
-        option = 'No'
         if option == "Yes":
             color = "red"
             info = "Location contains LSL"
@@ -123,25 +135,24 @@ def map_cols():
         # fl.Marker(location=[lat, long],popup=info,tooltip = "Click for more information",icon=fl.Icon(color=color)).add_to(main_map)
         folium_static(main_map)
     
-    with c2:
-        st.write('')
-        st.write('')
-        st.write('')
-        st.write('Address containing potential LSL.')
-        st.write(row['Address'])
-        st.write('Test this location for Lead with KETOS Shield (TM)')
-        st.write('')
-        option = st.selectbox("Does this location contain an LSL?",("Select","Yes","No","stop"),0)
 
     with c3:
         acc_cache_path = 'acc_cache.csv'
         if os.path.exists(acc_cache_path):
             acc_df = pd.read_csv(acc_cache_path)
-            mu,sigma = 0.75,0.1
-            acc = np.random.normal(mu,sigma)
+            iteration = acc_df.shape[0]
+            mu,sigma = 0,0.1
+            
+            acc = 0.85-np.exp(-iteration/20)+np.random.normal(mu,sigma)
+            if acc>1:
+                acc = 0.6
+                
+            if acc<0:
+                acc=2*sigma
+                
             acc_df = acc_df.append({'accuracy':acc},ignore_index=True)
             acc_df.to_csv(acc_cache_path,index=False)
-            fig,ax = plt.subplots(figsize=(4,3))
+            fig,ax = plt.subplots(figsize=(3,2))
             ax.plot(100*acc_df['accuracy'],'bo-')
             ax.set_title('Model Accuracy versus training iterations')
             ax.set_xlabel('Training Iterations')
@@ -150,7 +161,6 @@ def map_cols():
         else:
             acc_df = pd.DataFrame(columns=['accuracy'])
             acc_df.to_csv(acc_cache_path,index=False)
-
 
 
 
