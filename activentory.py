@@ -97,8 +97,7 @@ def map_cols():
     with c2:
         idx = np.random.randint(0,df_map.shape[0])
         row = df_map.iloc[idx]
-        st.write('')
-        st.write('')
+
         st.write('')
         st.write('Address containing potential LSL.')
         st.write(row['Address'])
